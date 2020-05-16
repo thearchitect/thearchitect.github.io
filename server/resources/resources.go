@@ -3,23 +3,9 @@ package resources
 import (
 	"archive/tar"
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
-	"regexp"
-	"strings"
-	"text/template"
-
-	"github.com/tdewolff/minify"
-	"github.com/tdewolff/minify/css"
-	"github.com/tdewolff/minify/html"
-	"github.com/tdewolff/minify/js"
-	"github.com/tdewolff/minify/json"
-	"github.com/tdewolff/minify/svg"
-	"github.com/tdewolff/minify/xml"
-
-	"github.com/thearchitect/thearchitect.github.io/server/resources/resource"
 )
 
 //go:generate go-bindata -pkg resources -nocompress -nomemcopy -o ./bindata.gen.go -prefix resources/ ./resources/...
@@ -90,71 +76,4 @@ func DockerContext() func() io.Reader {
 	return func() io.Reader {
 		return bytes.NewReader(data)
 	}
-}
-
-func IndexHTML(embed bool) (index, webapp resource.Resource) {
-	webapp = WebAppJS()
-
-	indexText := renderTemplate(
-		_bindataIndexhtml,
-		map[string]interface{}{
-			"webapp": webapp.HTMLTag(embed),
-		},
-	)
-
-	min := minifier()
-
-	indexText, err := min.String(string(resource.ContentTypeHTML), indexText)
-	if err != nil {
-		panic(err)
-	}
-
-	index = resource.NewIndexResource(fmt.Sprintln(
-		"",
-		strings.Repeat("\n", 128),
-		"",
-		indexText,
-	))
-
-	return index, webapp
-}
-
-func WebAppJS() resource.Resource {
-	return resource.NewJSResource(_bindataWebappjs)
-}
-
-////////////////////////////////////////////////////////////////
-//// Minifier
-////
-func minifier() *minify.M {
-	m := minify.New()
-	m.Add("text/html", &html.Minifier{
-		KeepDefaultAttrVals: true,
-		KeepWhitespace:      true,
-	})
-	m.AddFunc("text/css", css.Minify)
-	m.AddFunc("image/svg+xml", svg.Minify)
-	m.AddFuncRegexp(regexp.MustCompile("^(application|text)/(x-)?(java|ecma)script$"), js.Minify)
-	m.AddFuncRegexp(regexp.MustCompile("[/+]json$"), json.Minify)
-	m.AddFuncRegexp(regexp.MustCompile("[/+]xml$"), xml.Minify)
-
-	return m
-}
-
-////////////////////////////////////////////////////////////////
-//// Templating
-////
-func renderTemplate(text string, v interface{}) string {
-	tmpl, err := template.New("").Parse(text)
-	if err != nil {
-		panic(err)
-	}
-
-	buf := bytes.NewBuffer([]byte{})
-
-	if err := tmpl.Execute(buf, v); err != nil {
-		panic(err)
-	}
-
-	return buf.String()
 }

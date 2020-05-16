@@ -2,13 +2,11 @@ package server
 
 import (
 	"context"
-	"log"
 	"net"
 	"net/http"
 	"runtime"
 
 	"github.com/rs/cors"
-	"github.com/thearchitect/thearchitect.github.io/server/resources"
 )
 
 // https://github.com/soheilhy/cmux
@@ -41,20 +39,6 @@ func Run(ctx context.Context) {
 }
 
 func Handler() http.HandlerFunc {
-	mux := http.NewServeMux()
 
-	mux.HandleFunc("/ws", ServeContainerHTTP())
-
-	index, webapp := resources.IndexHTML(true)
-
-	webapp.Mount(mux)
-
-	mux.Handle("/", index)
-
-	return func(w http.ResponseWriter, q *http.Request) {
-
-		log.Println("request", q.URL.String())
-
-		mux.ServeHTTP(w, q)
-	}
+	return ServeContainerHTTP()
 }
