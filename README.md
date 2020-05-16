@@ -1,1 +1,0 @@
-# thearchitect.github.io
