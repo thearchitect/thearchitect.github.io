@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e -x
+
+time npm run build --prefix ./webapp
+
+cd ./webapp/dist
+
+git add --all
+git commit -a -m "dist"
+git push origin master

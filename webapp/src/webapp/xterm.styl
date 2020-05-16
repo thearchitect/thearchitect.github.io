@@ -1,0 +1,89 @@
+.xterm
+    font-feature-settings "liga" 0
+    position relative
+    user-select none
+    -ms-user-select none
+    -webkit-user-select none
+    cursor text
+    .xterm-helpers
+        position absolute
+        top 0
+        z-index 5
+    .xterm-helper-textarea
+        position absolute
+        opacity 0
+        left -9999em
+        top 0
+        width 0
+        height 0
+        z-index -5
+        white-space nowrap
+        overflow hidden
+        resize none
+    .composition-view
+        background #000
+        color #FFF
+        display none
+        position absolute
+        white-space nowrap
+        z-index 1
+        &.active
+            display block
+    .xterm-viewport
+        background-color #000
+        overflow-y scroll
+        cursor default
+        position absolute
+        right 0
+        left 0
+        top 0
+        bottom 0
+    .xterm-screen
+        position relative
+        canvas
+            position absolute
+            left 0
+            top 0
+    .xterm-scroll-area
+        visibility hidden
+    &.enable-mouse-events
+        cursor default
+    &.xterm-cursor-pointer
+        cursor pointer
+    &.column-select
+        &.focus
+            cursor crosshair
+    .live-region
+        position absolute
+        left -9999px
+        width 1px
+        height 1px
+        overflow hidden
+
+.xterm.focus,
+.xterm:focus
+    outline none
+
+.xterm-char-measure-element
+    display inline-block
+    visibility hidden
+    position absolute
+    top 0
+    left -9999em
+    line-height normal
+
+.xterm .xterm-accessibility,
+.xterm .xterm-message
+    position absolute
+    left 0
+    top 0
+    bottom 0
+    right 0
+    z-index 10
+    color transparent
+
+.xterm-dim
+    opacity 0.5
+
+.xterm-underline
+    text-decoration underline

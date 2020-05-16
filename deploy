@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e -x
+
+time go generate
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 time go build -a -installsuffix cgo -ldflags -s -o thearchitect
+
+rsync -rlpt -vz --progress ./thearchitect keeper@thearchitect:/home/keeper/thearchitect
+
+ssh -t keeper@thearchitect sh -c "sudo systemctl restart thearchitect ; journalctl -f -n 1024 -u thearchitect"

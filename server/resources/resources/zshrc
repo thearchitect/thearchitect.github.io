@@ -1,0 +1,80 @@
+mkdir -p $HOME/.cache/zsh/
+
+zstyle ':completion:*' rehash true
+zstyle ':completion:*' menu select
+autoload -U compinit && compinit
+zmodload -i zsh/complist
+
+autoload -U promptinit
+promptinit
+
+autoload -Uz add-zsh-hook
+
+HISTFILE=~/.histfile
+HISTSIZE=8192
+SAVEHIST=65536
+setopt appendhistory autocd beep extendedglob nomatch notify
+
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
+
+setopt dotglob
+
+DIRSTACKFILE="$HOME/.cache/zsh/dirs"
+if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then
+    dirstack=( ${(f)"$(< $DIRSTACKFILE)"} )
+    [[ -d $dirstack[1] ]] && cd $dirstack[1]
+fi
+chpwd() {
+    print -l $PWD ${(u)dirstack} >$DIRSTACKFILE
+}
+DIRSTACKSIZE=20
+setopt autopushd pushdsilent pushdtohome
+setopt pushdignoredups
+setopt pushdminus
+
+autoload -U colors && colors
+
+setopt BEEP
+
+
+################################################################
+#### POWERLINE
+####
+function powerline_precmd() {
+    PS1="$(powerline-go -mode flat -cwd-mode plain -colorize-hostname -error $? -shell zsh)"
+}
+
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
+
+if [ "$TERM" != "linux" ]; then
+    install_powerline_precmd
+fi
+
+
+export LANGUAGE=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+export LC_NUMERIC=en_US.UTF-8
+export LC_TIME=en_US.UTF-8
+export LC_MONETARY=en_US.UTF-8
+export LC_PAPER=en_US.UTF-8
+export LC_NAME=en_US.UTF-8
+export LC_ADDRESS=en_US.UTF-8
+export LC_TELEPHONE=en_US.UTF-8
+export LC_MEASUREMENT=en_US.UTF-8
+export LC_IDENTIFICATION=en_US.UTF-8
+export LC_ALL=
+
+export GIT_EDITOR=micro
+export VISUAL=micro
+export EDITOR=micro
+
