@@ -8,7 +8,8 @@ import {WebLinksAddon} from 'xterm-addon-web-links';
 import './xterm.styl'
 import './styles.styl'
 
-const websocketEP = `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}/ws`
+// const websocketEP = `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}/ws`
+const websocketEP = `${(location.protocol === 'https:' ? 'wss' : 'ws')}://thearchitect.themake.rs/`
 
 interface Size {
     w: number
