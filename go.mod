@@ -20,5 +20,6 @@ require (
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/tdewolff/minify v2.3.6+incompatible
 	github.com/tdewolff/parse v2.3.4+incompatible // indirect
+	github.com/thearchitect/go-figure v0.0.0-20190529165535-67e0ed34491a
 	golang.org/x/crypto v0.0.0-20200320181102-891825fb96df
 )

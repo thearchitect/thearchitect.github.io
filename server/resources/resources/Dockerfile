@@ -42,7 +42,7 @@ RUN \
 # RUN printf "$HOSTNAME" > /etc/hostname
 # RUN printf "127.0.0.1\tlocalhost\t$HOSTNAME" > /etc/hosts
 
-# COPY /thearchitect /thearchitect
+COPY /thearchitect /thearchitect
 
 ################################################################
 #### User setup
@@ -66,11 +66,12 @@ RUN \
 
 RUN chown -R ${USER_UID}:${USER_GID} /home/${USERNAME}
 
-USER $USERNAME
+#USER $USERNAME
 
 ################################################################
 #### Final image
 ####
 FROM user
 
-ENTRYPOINT ["zsh", "-l", "-c", "mc / /home/johnny; zsh -l"]
+#ENTRYPOINT ["zsh", "-l", "-c", "mc / /home/johnny; zsh -l"]
+ENTRYPOINT ["/thearchitect"]

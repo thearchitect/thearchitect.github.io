@@ -5,6 +5,8 @@ rm -rf ./webapp/dist
 
 git worktree add -f webapp/dist master
 
+find ./webapp/dist/ -type f -not -name '.git' -delete
+
 time npm run build --prefix ./webapp
 
 cd ./webapp/dist

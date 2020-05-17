@@ -3,19 +3,14 @@ package ui
 import (
 	"context"
 	"fmt"
-	"os/exec"
 	"time"
 
 	"github.com/gcla/gowid"
-	"github.com/gcla/gowid/widgets/button"
 	"github.com/gcla/gowid/widgets/columns"
-	"github.com/gcla/gowid/widgets/edit"
 	"github.com/gcla/gowid/widgets/fill"
 	"github.com/gcla/gowid/widgets/framed"
 	"github.com/gcla/gowid/widgets/holder"
 	"github.com/gcla/gowid/widgets/pile"
-	"github.com/gcla/gowid/widgets/shadow"
-	"github.com/gcla/gowid/widgets/styled"
 	"github.com/gcla/gowid/widgets/terminal"
 	"github.com/gcla/gowid/widgets/text"
 	"github.com/gdamore/tcell"
@@ -28,11 +23,6 @@ import (
 func Run(ctx context.Context) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-
-	palette := gowid.Palette{
-		"invred": gowid.MakePaletteEntry(gowid.ColorBlack, gowid.ColorRed),
-		"line":   gowid.MakeStyledPaletteEntry(gowid.NewUrwidColor("black"), gowid.NewUrwidColor("light gray"), gowid.StyleBold),
-	}
 
 	title := text.New(" Hello ")
 
@@ -61,7 +51,7 @@ func Run(ctx context.Context) {
 		buildButton("", func(app gowid.IApp) {
 			// setTitle("", app)
 			title.SetText("", app)
-			description.SetText(`emptiness`, app)
+			description.SetText(`todo`, app)
 			content.SetSubWidget(widgetEmptiness, app)
 		}),
 	)
@@ -97,13 +87,12 @@ func Run(ctx context.Context) {
 			}),
 			D: gowid.RenderWithWeight{W: 1},
 		},
-	}), framed.Options{
+	}, columns.Options{}), framed.Options{
 		Frame: framed.SpaceFrame,
 	})
 
 	app, err := gowid.NewApp(gowid.AppArgs{
-		View:    view,
-		Palette: &palette,
+		View: view,
 	})
 	if err != nil {
 		panic(err)
@@ -154,139 +143,60 @@ L:
 	}
 }
 
-type Button struct {
-	Name     string
-	Callback func(app gowid.IApp)
-}
-
-func buildButton(name string, cb func(app gowid.IApp)) Button {
-	return Button{
-		Name:     name,
-		Callback: cb,
-	}
-}
-
-func buildMenu(buttons ...Button) *pile.Widget {
-	var (
-		activate   = make([]func(app gowid.IApp), len(buttons))
-		deactivate = make([]func(app gowid.IApp), len(buttons))
-	)
-
-	buildButton := func(n int, txt string, cb func(app gowid.IApp)) gowid.IWidget {
-		buildButton := func(active bool) gowid.IWidget {
-			if active {
-				txt := text.New(txt, text.Options{})
-				frmd := framed.New(txt, framed.Options{Frame: framed.UnicodeFrame})
-				shdw := shadow.New(frmd, 1)
-				stld := styled.New(
-					shdw,
-					gowid.MakePaletteEntry(gowid.ColorGreen, gowid.ColorBlack),
-				)
-				return stld
-			} else {
-				txt := text.New(txt, text.Options{})
-				frmd := framed.New(txt, framed.Options{Frame: framed.UnicodeFrame})
-				shdw := shadow.New(frmd, 1)
-				stld := styled.New(
-					shdw,
-					gowid.MakePaletteEntry(gowid.ColorRed, gowid.ColorBlack),
-				)
-				return stld
-			}
-		}
-
-		activeButton := buildButton(true)
-		inactiveButton := buildButton(false)
-
-		var btnw gowid.IWidget
-		if n == 0 {
-			btnw = activeButton
-		} else {
-			btnw = inactiveButton
-		}
-		hldr := holder.New(btnw)
-		btn := button.New(hldr, button.Options{})
-
-		activate[n] = func(app gowid.IApp) {
-			hldr.SetSubWidget(activeButton, app)
-		}
-		deactivate[n] = func(app gowid.IApp) {
-			hldr.SetSubWidget(inactiveButton, app)
-		}
-
-		handleActivation := func(app gowid.IApp) {
-			for i := 0; i < len(buttons); i++ {
-				if i == n {
-					activate[i](app)
-				} else {
-					deactivate[i](app)
-				}
-			}
-		}
-
-		btn.OnClick(gowid.WidgetCallback{
-			WidgetChangedFunction: func(app gowid.IApp, w gowid.IWidget) {
-				handleActivation(app)
-				cb(app)
-			},
-		})
-
-		return btn
-	}
-
-	var widgets []gowid.IContainerWidget
-
-	for n, b := range buttons {
-		widgets = append(widgets, &gowid.ContainerWidget{
-			IWidget: buildButton(n, b.Name, b.Callback),
-			D:       gowid.RenderFlow{},
-		})
-	}
-
-	return pile.New(widgets, pile.Options{})
-}
-
-func buildHello2() (gowid.IWidget, func(app gowid.IApp)) {
-	w := edit.New(edit.Options{})
-	//w := gowid.NewCanvas()
-	//sh -c "figlet -f poison Hello | lolcat; while true; do sleep 2; done"
-	return w, func(app gowid.IApp) {
-		// poison sblood fraktur
-		cmd := exec.Command("sh", "-c", "figlet -f poison Hello | lolcat")
-		cmd.Stdout = &edit.Writer{Widget: w, IApp: app}
-		//cmd.Stdout = w
-		if err := cmd.Start(); err != nil {
-			panic(err)
-		}
-		app.Redraw()
-	}
-}
-
-func buildEmptiness() *fill.Widget {
-	return fill.New(' ')
-}
-
 func buildHello() gowid.IWidget {
-	// poison sblood fraktur
-	termWidget, err := terminal.NewExt(terminal.Options{
-		//Command:    []string{"/bin/sh", "-c", "figlet -f poison Hello | lolcat -t -a"},
-		//Command:    []string{"figlet", "-f", "poison", "Hello"},
-		Command: []string{"toilet", "-d", "/usr/local/share/figlet/fonts", "-f", "fraktur", "--filter", "metal", "Hello"},
-		//Env: []string{"TERM=xterm-256color", "COLORTERM=truecolor"},
-		Scrollback: 1024,
+	c := (Content{}).
+		Banner("HELLO", "sblood", nil).
+		Text("", nil).
+		Text("", nil).
+		Text("1234567890", nil).
+		Text("", nil).
+		Text("", nil).
+		Content()
+	w := text.NewFromContentExt(c, text.Options{
+		Wrap: text.WrapClip,
 	})
-	if err != nil {
-		panic(err)
-	}
+	return w
+}
 
-	return termWidget
+func buildEmptiness() gowid.IWidget {
+	//dim := gowid.RenderFixed{}
+	//w := columns.New([]gowid.IContainerWidget{
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("WAKE"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("UP"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("NEO"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("FOLLOW"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("THE"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("WHITE"),
+	//		D:       dim,
+	//	},
+	//	&gowid.ContainerWidget{
+	//		IWidget: text.New("RABBIT"),
+	//		D:       dim,
+	//	},
+	//}, columns.Options{
+	//	Wrap: true,
+	//})
+
+	return fill.New('•')
 }
 
 func buildCrashRoom(setTitle func(t string, app gowid.IApp)) *terminal.Widget {
-	//tw := text.New(" Terminal ")
-	//twi := styled.New(tw, gowid.MakePaletteRef("invred"))
-	//twp := holder.New(tw)
-
 	termWidget, err := terminal.NewExt(terminal.Options{
 		Command: []string{"/bin/sh", "-l", "-c", "mc / /home/johnny; zsh -l"},
 		//Env:               environment.Environ().Slice(),

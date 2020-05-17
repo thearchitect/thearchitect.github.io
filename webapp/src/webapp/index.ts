@@ -137,7 +137,6 @@ const letsGetPartyStarted = () => {
     unicode11Addon.activate(terminal)
     terminal.unicode.activeVersion = '11';
 
-
     const ws = new WS(terminal)
     ws.active = true
 
@@ -153,9 +152,9 @@ const letsGetPartyStarted = () => {
         fit()
     }
 
-    setTimeout(fit, 1)
+    setTimeout(fit, 500)
     // setTimeout(fit, 500)
-    setInterval(fit, 10000)
+    setInterval(fit, 1000)
 }
 
 Object.defineProperty(window, 'letsGetPartyStarted', {

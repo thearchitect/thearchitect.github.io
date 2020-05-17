@@ -1,7 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const resolve = (...ps) => {
     return path.resolve(__dirname, ...ps)
@@ -62,8 +61,7 @@ module.exports = {
             scriptLoading: 'defer',
             // template: resolve('index.html')
             templateContent: template
-        }),
-        new CleanWebpackPlugin()
+        })
     ],
     module: {
         rules: [

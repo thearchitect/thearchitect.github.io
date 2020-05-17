@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/gorilla/websocket"
@@ -87,6 +88,8 @@ func ServeContainer(ctx context.Context, dockerContext func() io.Reader, conn *w
 			panic(err)
 		}
 	}
+
+	time.Sleep(2 * time.Second)
 
 	// TODO https://docs.docker.com/config/containers/resource_constraints/
 	Banner(stdio, "Starting container")
