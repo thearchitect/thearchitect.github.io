@@ -16,6 +16,7 @@ require (
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/moby/moby v1.13.1 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
+	github.com/rivo/tview v0.0.0-20200507165325-823f280c5426
 	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/tdewolff/minify v2.3.6+incompatible

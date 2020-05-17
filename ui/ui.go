@@ -145,12 +145,35 @@ L:
 
 func buildHello() gowid.IWidget {
 	c := (Content{}).
-		Banner("HELLO", "sblood", nil).
-		Text("", nil).
-		Text("", nil).
-		Text("1234567890", nil).
-		Text("", nil).
-		Text("", nil).
+		Banner("The Architect", "sblood", nil).
+		Text(`
+mailto:makerussiagreatagain@icloud.com
+
+- Commercial software engineering practice since 2005; Mainly backend (in Golang, since 2015)
+- 2018-.... * StoreMood (https://storemood.com/)
+            -- CTO / Backend Developer / Co-Founder
+            -- Project is functioning
+            -- 11 engineers and 1 designer in a team
+            -- Golang / MongoDB / Vue / Electron / Flutter / Hardware
+- 2016-2018 * Document Workflow Management System (name not specified)
+            -- CTO / Backend Developer / Co-Founder
+            -- Project is functioning
+            -- 4 engineers in a team
+            -- Golang / MongoDB / Vue
+- 2017-.... * Lots of useless opensource experiments
+- 2013-2014 * Android Development
+
+My actual technology stack:
+* C * C++ * JavaScript * TypeScript * Java * Scala * C# * Lua *
+* Node * Android SDK * Electron * Flutter *
+* Solidity *
+* Vue * Angular * Mithril *
+* MongoDB * MySQL * PostgreSQL * Redis * ClickHouse * Cassandra * SQLite * Bolt *
+* gRPC * Apache Thrift *
+* Docker * Linux * NixOS *
+
+Source for this site: https://github.com/thearchitect/thearchitect.github.io
+`, nil).
 		Content()
 	w := text.NewFromContentExt(c, text.Options{
 		Wrap: text.WrapClip,

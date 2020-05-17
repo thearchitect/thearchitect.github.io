@@ -5,6 +5,7 @@
 
 package resources
 
+
 import (
 	"fmt"
 	"io/ioutil"
@@ -27,6 +28,7 @@ func bindataRead(data, name string) ([]byte, error) {
 	bx.Cap = bx.Len
 	return b, nil
 }
+
 
 type asset struct {
 	bytes []byte
@@ -156,6 +158,8 @@ func bindataDockerfileBytes() ([]byte, error) {
 	)
 }
 
+
+
 func bindataDockerfile() (*asset, error) {
 	bytes, err := bindataDockerfileBytes()
 	if err != nil {
@@ -163,11 +167,11 @@ func bindataDockerfile() (*asset, error) {
 	}
 
 	info := bindataFileInfo{
-		name:        "Dockerfile",
-		size:        2231,
+		name: "Dockerfile",
+		size: 2231,
 		md5checksum: "",
-		mode:        os.FileMode(420),
-		modTime:     time.Unix(1589600700, 0),
+		mode: os.FileMode(420),
+		modTime: time.Unix(1589600700, 0),
 	}
 
 	a := &asset{bytes: bytes, info: info}
@@ -246,6 +250,8 @@ func bindataZshrcBytes() ([]byte, error) {
 	)
 }
 
+
+
 func bindataZshrc() (*asset, error) {
 	bytes, err := bindataZshrcBytes()
 	if err != nil {
@@ -253,17 +259,18 @@ func bindataZshrc() (*asset, error) {
 	}
 
 	info := bindataFileInfo{
-		name:        "zshrc",
-		size:        1740,
+		name: "zshrc",
+		size: 1740,
 		md5checksum: "",
-		mode:        os.FileMode(420),
-		modTime:     time.Unix(1589595268, 0),
+		mode: os.FileMode(420),
+		modTime: time.Unix(1589595268, 0),
 	}
 
 	a := &asset{bytes: bytes, info: info}
 
 	return a, nil
 }
+
 
 //
 // Asset loads and returns the asset for the given name.
@@ -356,18 +363,18 @@ func AssetDir(name string) ([]string, error) {
 			node = node.Children[p]
 			if node == nil {
 				return nil, &os.PathError{
-					Op:   "open",
+					Op: "open",
 					Path: name,
-					Err:  os.ErrNotExist,
+					Err: os.ErrNotExist,
 				}
 			}
 		}
 	}
 	if node.Func != nil {
 		return nil, &os.PathError{
-			Op:   "open",
+			Op: "open",
 			Path: name,
-			Err:  os.ErrNotExist,
+			Err: os.ErrNotExist,
 		}
 	}
 	rv := make([]string, 0, len(node.Children))
@@ -377,6 +384,7 @@ func AssetDir(name string) ([]string, error) {
 	return rv, nil
 }
 
+
 type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
@@ -384,7 +392,7 @@ type bintree struct {
 
 var _bintree = &bintree{Func: nil, Children: map[string]*bintree{
 	"Dockerfile": {Func: bindataDockerfile, Children: map[string]*bintree{}},
-	"zshrc":      {Func: bindataZshrc, Children: map[string]*bintree{}},
+	"zshrc": {Func: bindataZshrc, Children: map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

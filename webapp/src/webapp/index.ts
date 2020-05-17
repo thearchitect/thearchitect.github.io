@@ -124,6 +124,13 @@ const letsGetPartyStarted = () => {
 
     terminal.loadAddon(new WebLinksAddon());
 
+    terminal.registerLinkMatcher(/mailto:([^\?]*.com)/, (_: MouseEvent, uri: string) => {
+        const win = window.open(uri, '_blank')
+        if (win) {
+            win.focus()
+        }
+    }, {})
+
     {
         const tel = window.document.getElementById('terminal')
         if (tel != null) {
